@@ -1,19 +1,24 @@
+// student_model.dart
+
 class StudentModel {
   String? name;
-  int? age;
-  int? classs;
+  String? age;
+  String? classs;
+
   StudentModel({this.name, this.age, this.classs});
+
   factory StudentModel.fromJson(Map<String, dynamic> json) {
     return StudentModel(
-      name: json['name'],
-      age: json['roll no'],
-      classs: json['class'],
+      name: json['name'] as String?,
+      age: json['age'] as String?,
+      classs: json['class'] as String?,
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'name': name,
-      'roll no': age,
+      'age': age,
       'class': classs,
     };
   }
