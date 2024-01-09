@@ -1,62 +1,50 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:students/views/home.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:students/model/student_model.dart';
+import 'package:students/service/firbase_service.dart';
 
 class EditPage extends StatefulWidget {
-  const EditPage({Key? key}) : super(key: key);
+  StudentModel student;
+  String id;
+  EditPage({
+    Key? key,
+    required this.student,
+    required this.id,
+  }) : super(key: key);
 
   @override
   State<EditPage> createState() => _EditPageState();
 }
 
 class _EditPageState extends State<EditPage> {
-  String name = "";
-  int age = 0;
-  String bloodGroup = "";
+  
+  TextEditingController nameController = TextEditingController();
+  TextEditingController rollController = TextEditingController();
+  TextEditingController classController = TextEditingController();
   File? selectedImage; // Use File for image selection
+   bool clicked = true;
 
-  // Image picker function
-  Future<void> _pickImage() async {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Wrap(
-          children: <Widget>[
-            ListTile(
-              leading: Icon(Icons.photo_library),
-              title: Text('Gallery'),
-              onTap: () async {
-                Navigator.pop(context);
-                _getImage(ImageSource.gallery);
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.camera_alt),
-              title: Text('Camera'),
-              onTap: () async {
-                Navigator.pop(context);
-                _getImage(ImageSource.camera);
-              },
-            ),
-          ],
-        );
-      },
-    );
+  ImagePicker imagePicker = ImagePicker();
+
+  void setImage(ImageSource source) async {
+    final pickedImage = await imagePicker.pickImage(source: source);
+    setState(() {
+      selectedImage = pickedImage != null ? File(pickedImage.path) : null;
+    });
   }
+ void initState() {
+    // TODO: implement initState
+    super.initState();
+    nameController = TextEditingController(text: widget.student.name);
+    rollController = TextEditingController(text: widget.student.age);
+    classController = TextEditingController(text: widget.student.classs);
 
-  Future<void> _getImage(ImageSource source) async {
-    final picker = ImagePicker();
-    final pickedImage = await picker.pickImage(source: source);
-
-    if (pickedImage != null) {
-      setState(() {
-        selectedImage = File(pickedImage.path);
-      });
-    }
+   
+    
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,49 +54,53 @@ class _EditPageState extends State<EditPage> {
         child: Column(
           children: [
             TextFormField(
+              controller: nameController,
               decoration: InputDecoration(labelText: 'Name'),
-              onChanged: (value) {
-                setState(() {
-                  name = value;
-                });
-              },
             ),
             SizedBox(height: 16.0),
             TextFormField(
-              decoration: InputDecoration(labelText: 'Age'),
+              controller: classController,
+              decoration: InputDecoration(labelText: 'Class'),
               keyboardType: TextInputType.number,
-              onChanged: (value) {
-                setState(() {
-                  age = int.tryParse(value) ?? 0;
-                });
-              },
             ),
             SizedBox(height: 16.0),
             TextFormField(
-              decoration: InputDecoration(labelText: 'Blood Group'),
-              onChanged: (value) {
-                setState(() {
-                  bloodGroup = value;
-                });
-              },
+              controller: rollController,
+              decoration: InputDecoration(labelText: 'Roll no'),
             ),
             SizedBox(height: 16.0),
-            InkWell(
-              onTap: _pickImage, // Call the image picker function
-              child: selectedImage == null
-                  ? Text('Select Image')
-                  : Image.file(selectedImage!),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    setImage(ImageSource.camera);
+                  },
+                  child: const Text('Camera'),
+                ),
+                const SizedBox(
+                  width: 30,
+                ),
+                TextButton(
+                  onPressed: () {
+                    setImage(ImageSource.gallery);
+                  },
+                  child: const Text('Gallery'),
+                ),
+              ],
             ),
+            if (selectedImage != null)
+              Image.file(
+                selectedImage!,
+                height: 100,
+                width: 100,
+                fit: BoxFit.cover,
+              ),
             SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
-                // Implement save logic here
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => HomePage(),
-                  ),
-                );
+                editStudent(context,context);
+                //addStudent(context);
               },
               child: Text('Save'),
             ),
@@ -117,4 +109,26 @@ class _EditPageState extends State<EditPage> {
       ),
     );
   }
+  editStudent(context, imageurl) async {
+   
+    final editedname = nameController.text;
+    final editedage = rollController.text;
+     final editclass = classController.text;
+    
+
+    //await prodata.updateImage(imageurl, File(pro.selectedimage!.path));
+    final updatedstudent = StudentModel(
+       
+        
+        name: editedname,
+        age: editedage,
+        classs: editclass,
+       );
+
+    FirebaseService(). updateStudent(widget.id, updatedstudent);
+    Navigator.pop(context);
+  }
+
+ 
+ 
 }

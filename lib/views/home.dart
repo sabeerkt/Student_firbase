@@ -90,7 +90,8 @@ class _HomePageState extends State<HomePage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => EditPage(),
+                                    builder: (context) => EditPage(   id: id,
+                                              student: data,),
                                   ),
                                 );
                                 // Add logic for editing the student data
@@ -146,4 +147,5 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+  
 }

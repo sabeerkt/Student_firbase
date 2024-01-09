@@ -34,70 +34,78 @@ class _AddPageState extends State<AddPage> {
       appBar: AppBar(
         title: Text('Add Page'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextFormField(
-              controller: widget.nameController,
-              decoration: InputDecoration(labelText: 'Name'),
-            ),
-            SizedBox(height: 16.0),
-            TextFormField(
-              controller: widget.classController,
-              decoration: InputDecoration(labelText: 'Class'),
-              keyboardType: TextInputType.number,
-            ),
-            SizedBox(height: 16.0),
-            TextFormField(
-              controller: widget.rollController,
-              decoration: InputDecoration(labelText: 'Roll no'),
-            ),
-            SizedBox(height: 16.0),
-            // Padding(
-            //   padding: const EdgeInsets.only(left: 80),
-            //   child: CircleAvatar(
-            //     backgroundImage: selectedImage != null
-            //         ? FileImage(selectedImage!)
-            //         : AssetImage('assets/images/profile.png'),
-            //     radius: 60,
-            //   ),
-            // ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    setImage(ImageSource.camera);
-                  },
-                  child: const Text('Camera'),
-                ),
-                const SizedBox(
-                  width: 30,
-                ),
-                TextButton(
-                  onPressed: () {
-                    setImage(ImageSource.gallery);
-                  },
-                  child: const Text('Gallery'),
-                ),
-              ],
-            ),
-            if (selectedImage != null)
-              Image.file(
-                selectedImage!,
-                height: 100,
-                width: 100,
-                fit: BoxFit.cover,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Existing form fields remain unchanged
+              TextFormField(
+                controller: widget.nameController,
+                decoration: InputDecoration(labelText: 'Name'),
               ),
-            SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () {
-                addStudent(context);
-              },
-              child: Text('Save'),
-            ),
-          ],
+              SizedBox(height: 16.0),
+              TextFormField(
+                controller: widget.classController,
+                decoration: InputDecoration(labelText: 'Class'),
+                keyboardType: TextInputType.number,
+              ),
+              SizedBox(height: 16.0),
+              TextFormField(
+                controller: widget.rollController,
+                decoration: InputDecoration(labelText: 'Roll no'),
+              ),
+              SizedBox(height: 16.0),
+
+              // Redesigned image picker buttons
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      setImage(ImageSource.camera);
+                    },
+                    icon: Icon(Icons.camera_alt),
+                    label: Text('Camera'),
+                  ),
+                  SizedBox(
+                    width: 16.0,
+                  ),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      setImage(ImageSource.gallery);
+                    },
+                    icon: Icon(Icons.photo),
+                    label: Text('Gallery'),
+                  ),
+                ],
+              ),
+
+              // Display selected image if available
+              if (selectedImage != null)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: Image.file(
+                      selectedImage!,
+                      height: 100,
+                      width: 100,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+
+              // Save button
+              ElevatedButton(
+                onPressed: () {
+                  addStudent(context);
+                },
+                child: Text('Save'),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -106,8 +114,7 @@ class _AddPageState extends State<AddPage> {
   void addStudent(BuildContext context) async {
     final name = widget.nameController.text;
     final roll = widget.rollController.text;
-    final classs =
-       widget.classController.text; // Parse as an integer
+    final classs = widget.classController.text; // Parse as an integer
 
     final student = StudentModel(
       name: name,
