@@ -5,7 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:students/controller/student_provider.dart';
 import 'package:students/model/student_model.dart';
-import 'package:students/service/firbase_service.dart';
+
 import 'package:students/views/home.dart';
 
 class AddPage extends StatefulWidget {
@@ -34,7 +34,8 @@ class _AddPageState extends State<AddPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Page'),
+        title: Text('Add Student'),
+        backgroundColor: Colors.deepPurple, // Set app bar color
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -69,7 +70,7 @@ class _AddPageState extends State<AddPage> {
                       setImage(ImageSource.camera);
                     },
                     icon: Icon(Icons.camera_alt),
-                    label: Text('Camera'),
+                    label: Text('Take Photo'),
                   ),
                   SizedBox(
                     width: 16.0,
@@ -79,7 +80,7 @@ class _AddPageState extends State<AddPage> {
                       setImage(ImageSource.gallery);
                     },
                     icon: Icon(Icons.photo),
-                    label: Text('Gallery'),
+                    label: Text('Choose from Gallery'),
                   ),
                 ],
               ),
@@ -104,6 +105,10 @@ class _AddPageState extends State<AddPage> {
                 onPressed: () {
                   addStudent(context);
                 },
+                style: ElevatedButton.styleFrom(
+                  primary: const Color.fromARGB(
+                      255, 248, 248, 248), // Set button color
+                ),
                 child: Text('Save'),
               ),
             ],
@@ -114,10 +119,10 @@ class _AddPageState extends State<AddPage> {
   }
 
   void addStudent(BuildContext context) async {
-    final provider = Provider.of<StudentProvider>(context,listen: false);
+    final provider = Provider.of<StudentProvider>(context, listen: false);
     final name = widget.nameController.text;
     final roll = widget.rollController.text;
-    final classs = widget.classController.text; // Parse as an integer
+    final classs = widget.classController.text;
 
     final student = StudentModel(
       name: name,

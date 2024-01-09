@@ -11,31 +11,59 @@ class Detail extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(student.name ?? 'Student Detail'),
+        backgroundColor: Colors.deepPurple, // Set app bar color
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "Name: ${student.name ?? ''}",
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+            // Display student details with improved styling
+            ListTile(
+              title: Text(
+                "Name",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              subtitle: Text(
+                student.name ?? '',
+                style: TextStyle(
+                  fontSize: 20,
+                ),
               ),
             ),
             const SizedBox(height: 10),
-            Text(
-              "Age: ${student.age ?? ''}",
-              style: const TextStyle(
-                fontSize: 16,
+            ListTile(
+              title: Text(
+                "Age",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              subtitle: Text(
+                student.age ?? '',
+                style: TextStyle(
+                  fontSize: 16,
+                ),
               ),
             ),
             const SizedBox(height: 10),
-            Text(
-              "Class: ${student.classs ?? ''}",
-              style: const TextStyle(
-                fontSize: 16,
+            ListTile(
+              title: Text(
+                "Class",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              subtitle: Text(
+                student.classs ?? '',
+                style: TextStyle(
+                  fontSize: 16,
+                ),
               ),
             ),
             // Add more details as needed
