@@ -7,7 +7,7 @@ import 'package:students/service/firbase_service.dart';
 
 import 'package:students/views/add.dart';
 import 'package:students/views/deatil.dart';
-
+import 'package:students/views/edit.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -35,7 +35,8 @@ class _HomePageState extends State<HomePage> {
                   child: Text('Snapshot has error'),
                 );
               } else {
-                List<QueryDocumentSnapshot<StudentModel>> studentsDoc = snapshot.data?.docs ?? [];
+                List<QueryDocumentSnapshot<StudentModel>> studentsDoc =
+                    snapshot.data?.docs ?? [];
                 return Expanded(
                   child: ListView.builder(
                     itemCount: studentsDoc.length,
@@ -86,6 +87,12 @@ class _HomePageState extends State<HomePage> {
                                 color: Colors.blue,
                               ),
                               onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => EditPage(),
+                                  ),
+                                );
                                 // Add logic for editing the student data
                                 // You may want to navigate to a different page for editing
                               },

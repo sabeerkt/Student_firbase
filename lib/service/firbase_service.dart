@@ -26,4 +26,8 @@ class FirebaseService {
   deleteStudent(id) async {
     await studentref.doc(id).delete();
   }
+  updateStudent(id, StudentModel student) async {
+    studentref.doc(id).update(student.toJson());
+    
+  }
 }
