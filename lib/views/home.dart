@@ -5,20 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:students/controller/student_provider.dart';
 import 'package:students/model/student_model.dart';
-import 'package:students/service/firbase_service.dart';
+
 
 import 'package:students/views/add.dart';
 import 'package:students/views/deatil.dart';
 import 'package:students/views/edit.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
-  @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,7 +82,7 @@ class _HomePageState extends State<HomePage> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 IconButton(
-                                  icon: Icon(
+                                  icon: const Icon(
                                     Icons.edit,
                                     color: Colors.blue,
                                   ),
@@ -103,7 +98,7 @@ class _HomePageState extends State<HomePage> {
                                   },
                                 ),
                                 IconButton(
-                                  icon: Icon(
+                                  icon: const Icon(
                                     Icons.delete,
                                     color: Colors.red,
                                   ),
@@ -152,5 +147,4 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-  
 }
