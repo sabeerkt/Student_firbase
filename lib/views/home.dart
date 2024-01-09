@@ -103,6 +103,7 @@ class HomePage extends StatelessWidget {
                                     ),
                                     onPressed: () {
                                       value.deleteStudent(id);
+                                      value.deleteImage(data.image);
                                     },
                                   ),
                                   const Icon(

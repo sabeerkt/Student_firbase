@@ -36,4 +36,21 @@ class StudentProvider extends ChangeNotifier {
       throw Exception(e);
     }
   }
+  updateImage(imageurl, newimage) async {
+    try {
+      if (newimage != null && newimage.existsSync()) {
+        Reference storedimage = FirebaseStorage.instance.refFromURL(imageurl);
+        await storedimage.putFile(newimage);
+        downloadurl = await storedimage.getDownloadURL();
+      } else {
+        downloadurl = imageurl;
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+  deleteImage(imageurl) async {
+    Reference storedimage = FirebaseStorage.instance.refFromURL(imageurl);
+    await storedimage.delete();
+  }
 }
