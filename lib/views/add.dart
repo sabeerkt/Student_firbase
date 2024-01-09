@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:students/controller/student_provider.dart';
 import 'package:students/model/student_model.dart';
 import 'package:students/service/firbase_service.dart';
 import 'package:students/views/home.dart';
@@ -112,6 +114,7 @@ class _AddPageState extends State<AddPage> {
   }
 
   void addStudent(BuildContext context) async {
+    final provider = Provider.of<StudentProvider>(context,listen: false);
     final name = widget.nameController.text;
     final roll = widget.rollController.text;
     final classs = widget.classController.text; // Parse as an integer
@@ -123,7 +126,7 @@ class _AddPageState extends State<AddPage> {
     );
 
     // Now, you should call the addStudent method from FirebaseService
-    await FirebaseService().addStudent(student);
+    provider.addStudent(student);
 
     // After adding the student, navigate back to the home page
     Navigator.push(

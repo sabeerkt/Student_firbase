@@ -15,19 +15,9 @@ class FirebaseService {
     );
   }
 
-  Stream<QuerySnapshot<StudentModel>> getData() {
-    return studentref.snapshots();
-  }
+ 
 
-  addStudent(StudentModel student) async {
-    await studentref.add(student);
-  }
+  
 
-  deleteStudent(id) async {
-    await studentref.doc(id).delete();
-  }
-  updateStudent(id, StudentModel student) async {
-    studentref.doc(id).update(student.toJson());
-    
-  }
+ 
 }

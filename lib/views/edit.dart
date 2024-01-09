@@ -3,8 +3,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:students/controller/student_provider.dart';
 import 'package:students/model/student_model.dart';
-import 'package:students/service/firbase_service.dart';
+
 
 class EditPage extends StatefulWidget {
   StudentModel student;
@@ -110,6 +112,7 @@ class _EditPageState extends State<EditPage> {
     );
   }
   editStudent(context, imageurl) async {
+    final provider = Provider.of<StudentProvider>(context,listen: false);
    
     final editedname = nameController.text;
     final editedage = rollController.text;
@@ -125,7 +128,7 @@ class _EditPageState extends State<EditPage> {
         classs: editclass,
        );
 
-    FirebaseService(). updateStudent(widget.id, updatedstudent);
+    provider. updateStudent(widget.id, updatedstudent);
     Navigator.pop(context);
   }
 
