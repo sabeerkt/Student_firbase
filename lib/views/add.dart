@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:students/controller/baseprovider.dart';
 import 'package:students/controller/student_provider.dart';
 import 'package:students/model/student_model.dart';
 
@@ -20,21 +21,12 @@ class AddPage extends StatefulWidget {
 }
 
 class _AddPageState extends State<AddPage> {
-  File? selectedImage;
-  ImagePicker imagePicker = ImagePicker();
-
-  void setImage(ImageSource source) async {
-    final pickedImage = await imagePicker.pickImage(source: source);
-    setState(() {
-      selectedImage = pickedImage != null ? File(pickedImage.path) : null;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    final pro = Provider.of<BaseProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Student'),
+        title: const Text('Add Student'),
         backgroundColor: Colors.deepPurple, // Set app bar color
       ),
       body: SingleChildScrollView(
@@ -46,20 +38,20 @@ class _AddPageState extends State<AddPage> {
               // Existing form fields remain unchanged
               TextFormField(
                 controller: widget.nameController,
-                decoration: InputDecoration(labelText: 'Name'),
+                decoration: const InputDecoration(labelText: 'Name'),
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               TextFormField(
                 controller: widget.classController,
-                decoration: InputDecoration(labelText: 'Class'),
+                decoration: const InputDecoration(labelText: 'Class'),
                 keyboardType: TextInputType.number,
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               TextFormField(
                 controller: widget.rollController,
-                decoration: InputDecoration(labelText: 'Roll no'),
+                decoration: const InputDecoration(labelText: 'Roll no'),
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
 
               // Redesigned image picker buttons
               Row(
@@ -67,32 +59,34 @@ class _AddPageState extends State<AddPage> {
                 children: [
                   ElevatedButton.icon(
                     onPressed: () {
-                      setImage(ImageSource.camera);
+                      // setImage(ImageSource.camera);
+                      pro.setImage(ImageSource.camera);
                     },
-                    icon: Icon(Icons.camera_alt),
-                    label: Text('Take Photo'),
+                    icon: const Icon(Icons.camera_alt),
+                    label: const Text('Take Photo'),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 16.0,
                   ),
                   ElevatedButton.icon(
                     onPressed: () {
-                      setImage(ImageSource.gallery);
+                      // setImage(ImageSource.gallery);
+                      pro.setImage(ImageSource.gallery);
                     },
-                    icon: Icon(Icons.photo),
-                    label: Text('Choose from Gallery'),
+                    icon: const Icon(Icons.photo),
+                    label: const Text('Choose from Gallery'),
                   ),
                 ],
               ),
 
               // Display selected image if available
-              if (selectedImage != null)
+              if (pro.selectedImage != null)
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
                     child: Image.file(
-                      selectedImage!,
+                      pro.selectedImage!,
                       height: 100,
                       width: 100,
                       fit: BoxFit.cover,
@@ -109,7 +103,7 @@ class _AddPageState extends State<AddPage> {
                   primary: const Color.fromARGB(
                       255, 248, 248, 248), // Set button color
                 ),
-                child: Text('Save'),
+                child: const Text('Save'),
               ),
             ],
           ),
@@ -120,15 +114,15 @@ class _AddPageState extends State<AddPage> {
 
   void addStudent(BuildContext context) async {
     final provider = Provider.of<StudentProvider>(context, listen: false);
+    final pro = Provider.of<BaseProvider>(context, listen: false);
     final name = widget.nameController.text;
     final roll = widget.rollController.text;
     final classs = widget.classController.text;
+    // final image = provider.downloadurl;
+    await provider.imageAdder(File(pro.selectedImage!.path));
 
     final student = StudentModel(
-      name: name,
-      age: roll,
-      classs: classs,
-    );
+        name: name, age: roll, classs: classs, image: provider.downloadurl);
 
     // Now, you should call the addStudent method from FirebaseService
     provider.addStudent(student);
@@ -137,7 +131,7 @@ class _AddPageState extends State<AddPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => HomePage(),
+        builder: (context) => const HomePage(),
       ),
     );
   }

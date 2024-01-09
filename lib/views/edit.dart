@@ -4,9 +4,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:students/controller/baseprovider.dart';
 import 'package:students/controller/student_provider.dart';
 import 'package:students/model/student_model.dart';
-
 
 class EditPage extends StatefulWidget {
   StudentModel student;
@@ -22,12 +22,11 @@ class EditPage extends StatefulWidget {
 }
 
 class _EditPageState extends State<EditPage> {
-  
   TextEditingController nameController = TextEditingController();
   TextEditingController rollController = TextEditingController();
   TextEditingController classController = TextEditingController();
   File? selectedImage; // Use File for image selection
-   bool clicked = true;
+  bool clicked = true;
 
   ImagePicker imagePicker = ImagePicker();
 
@@ -37,16 +36,15 @@ class _EditPageState extends State<EditPage> {
       selectedImage = pickedImage != null ? File(pickedImage.path) : null;
     });
   }
- void initState() {
+
+  void initState() {
     // TODO: implement initState
     super.initState();
     nameController = TextEditingController(text: widget.student.name);
     rollController = TextEditingController(text: widget.student.age);
     classController = TextEditingController(text: widget.student.classs);
-
-   
-    
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -101,7 +99,7 @@ class _EditPageState extends State<EditPage> {
             SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
-                editStudent(context,context);
+                editStudent(context, context);
                 //addStudent(context);
               },
               child: Text('Save'),
@@ -111,27 +109,25 @@ class _EditPageState extends State<EditPage> {
       ),
     );
   }
+
   editStudent(context, imageurl) async {
-    final provider = Provider.of<StudentProvider>(context,listen: false);
-   
+    final provider = Provider.of<StudentProvider>(context, listen: false);
+    final pro = Provider.of<BaseProvider>(context, listen: false);
+
     final editedname = nameController.text;
     final editedage = rollController.text;
-     final editclass = classController.text;
-    
+    final editclass = classController.text;
+    final editedimage = provider.downloadurl;
 
     //await prodata.updateImage(imageurl, File(pro.selectedimage!.path));
     final updatedstudent = StudentModel(
-       
-        
-        name: editedname,
-        age: editedage,
-        classs: editclass,
-       );
+      image: editedimage,
+      name: editedname,
+      age: editedage,
+      classs: editclass,
+    );
 
-    provider. updateStudent(widget.id, updatedstudent);
+    provider.updateStudent(widget.id, updatedstudent);
     Navigator.pop(context);
   }
-
- 
- 
 }

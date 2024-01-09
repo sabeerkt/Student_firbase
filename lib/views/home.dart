@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:students/controller/baseprovider.dart';
 import 'package:students/controller/student_provider.dart';
 import 'package:students/model/student_model.dart';
 
@@ -15,6 +16,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final pro = Provider.of<BaseProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Person List'),
@@ -72,13 +74,7 @@ class HomePage extends StatelessWidget {
                               ),
                               leading: CircleAvatar(
                                 backgroundColor: Colors.deepPurple,
-                                child: Text(
-                                  data.name?.substring(0, 1) ?? '',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                                backgroundImage: NetworkImage(data.image!),
                               ),
                               trailing: Row(
                                 mainAxisSize: MainAxisSize.min,
