@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:students/controller/baseprovider.dart';
 import 'package:students/controller/student_provider.dart';
 import 'package:students/model/student_model.dart';
-
 import 'package:students/views/home.dart';
 
 class AddPage extends StatefulWidget {
@@ -35,7 +34,6 @@ class _AddPageState extends State<AddPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Existing form fields remain unchanged
               TextFormField(
                 controller: widget.nameController,
                 decoration: const InputDecoration(labelText: 'Name'),
@@ -52,14 +50,11 @@ class _AddPageState extends State<AddPage> {
                 decoration: const InputDecoration(labelText: 'Roll no'),
               ),
               const SizedBox(height: 16.0),
-
-              // Redesigned image picker buttons
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton.icon(
                     onPressed: () {
-                      // setImage(ImageSource.camera);
                       pro.setImage(ImageSource.camera);
                     },
                     icon: const Icon(Icons.camera_alt),
@@ -70,7 +65,6 @@ class _AddPageState extends State<AddPage> {
                   ),
                   ElevatedButton.icon(
                     onPressed: () {
-                      // setImage(ImageSource.gallery);
                       pro.setImage(ImageSource.gallery);
                     },
                     icon: const Icon(Icons.photo),
@@ -78,8 +72,6 @@ class _AddPageState extends State<AddPage> {
                   ),
                 ],
               ),
-
-              // Display selected image if available
               if (pro.selectedImage != null)
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -93,15 +85,16 @@ class _AddPageState extends State<AddPage> {
                     ),
                   ),
                 ),
-
-              // Save button
               ElevatedButton(
                 onPressed: () {
-                  addStudent(context);
+                  if (_validateFields()) {
+                    addStudent(context);
+                  } else {
+                    _showAlert(context, 'Please fill in all fields.');
+                  }
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: const Color.fromARGB(
-                      255, 248, 248, 248), // Set button color
+                  primary: const Color.fromARGB(255, 248, 248, 248),
                 ),
                 child: const Text('Save'),
               ),
@@ -112,22 +105,50 @@ class _AddPageState extends State<AddPage> {
     );
   }
 
+  bool _validateFields() {
+    return widget.nameController.text.isNotEmpty &&
+        widget.classController.text.isNotEmpty &&
+        widget.rollController.text.isNotEmpty;
+  }
+
+  void _showAlert(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Alert'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void addStudent(BuildContext context) async {
     final provider = Provider.of<StudentProvider>(context, listen: false);
     final pro = Provider.of<BaseProvider>(context, listen: false);
     final name = widget.nameController.text;
     final roll = widget.rollController.text;
     final classs = widget.classController.text;
-    // final image = provider.downloadurl;
+
     await provider.imageAdder(File(pro.selectedImage!.path));
 
     final student = StudentModel(
-        name: name, age: roll, classs: classs, image: provider.downloadurl);
+      name: name,
+      age: roll,
+      classs: classs,
+      image: provider.downloadurl,
+    );
 
-    // Now, you should call the addStudent method from FirebaseService
     provider.addStudent(student);
 
-    // After adding the student, navigate back to the home page
     Navigator.push(
       context,
       MaterialPageRoute(
