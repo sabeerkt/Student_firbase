@@ -30,12 +30,7 @@ class _EditPageState extends State<EditPage> {
 
   ImagePicker imagePicker = ImagePicker();
 
-  void setImage(ImageSource source) async {
-    final pickedImage = await imagePicker.pickImage(source: source);
-    setState(() {
-      selectedImage = pickedImage != null ? File(pickedImage.path) : null;
-    });
-  }
+
 
   void initState() {
     super.initState();
@@ -101,18 +96,13 @@ class _EditPageState extends State<EditPage> {
                     padding: const EdgeInsets.symmetric(vertical: 16.0),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(8.0),
-                      child: Image.file(
-                        value.selectedImage!,
-                        height: 100,
-                        width: 100,
-                        fit: BoxFit.cover,
-                      ),
+                      child: Image.network(value.selectedImage!.path)
                     ),
                   ),
                 SizedBox(height: 16.0),
                 ElevatedButton(
                   onPressed: () {
-                    editStudent(context, widget.student.image);
+                    editStudent(context, value.selectedImage!.path);
                     //addStudent(context);
                   },
                   child: Text('Save'),
@@ -125,25 +115,32 @@ class _EditPageState extends State<EditPage> {
     );
   }
 
-  editStudent(context, imageurl) async {
-    final provider = Provider.of<StudentProvider>(context, listen: false);
-    final pro = Provider.of<BaseProvider>(context, listen: false);
+ editStudent(BuildContext context, String imageurl) async {
+  final provider = Provider.of<StudentProvider>(context, listen: false);
+  final pro = Provider.of<BaseProvider>(context, listen: false);
 
+  try {
     final editedname = nameController.text;
     final editedage = rollController.text;
     final editclass = classController.text;
-    final editedimage = provider.downloadurl;
-    await provider.updateImage(imageurl, File(pro.selectedImage!.path));
 
-    //await prodata.updateImage(imageurl, File(pro.selectedimage!.path));
+    // Update image URL in Firestore
+    await provider.updateImage(imageurl, pro.selectedImage);
+
     final updatedstudent = StudentModel(
-      image: editedimage,
+      image: imageurl,
       name: editedname,
       age: editedage,
       classs: editclass,
     );
 
+    // Update student information in Firestore
     provider.updateStudent(widget.id, updatedstudent);
+
     Navigator.pop(context);
+  } catch (e) {
+    // Handle exceptions appropriately (e.g., show an error message)
+    print("Error updating student: $e");
   }
+}
 }
